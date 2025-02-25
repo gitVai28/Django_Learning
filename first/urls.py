@@ -26,6 +26,7 @@ urlpatterns = [
     path('',firstr),
     path('receipes/',receipes, name='receipes'),
     path('delete_rep/<id>/', delete_rep),
+    path('update_rep/<id>/', update_rep),
     path('contact/',contact),
     path('about/',about),
     path('admin/', admin.site.urls),

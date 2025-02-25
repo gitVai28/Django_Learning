@@ -1,6 +1,6 @@
 {%extends "base.html"%}
 {% block start %}
-<div class="container ">
+<div class="container mt-5">
     <!-- enctype multipart/form data -->
     <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -20,12 +20,22 @@
         
         <button type="submit" class="btn btn-primary btn-success">Add Receipe</button>
       </form>
-
-
-      
+</div>
+<hr>
+<div class="mt-5">
+  <div class="mx-auto col-6">
+    <!-- if we do not pass ant method like post,get browser will automatically understand it is get method -->
+    <form >
+    <div>
+    <label for="exampleInputEmail1" class="form-label">Search Receipe</label>
+    <input type="text" name="search" class="form-control" >
+  </div>  
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+  </div>
 </div>
 
-<table class="table">
+<table class="table mt-5">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -45,7 +55,8 @@
         <img src="/media/{{receipe.image}}" style="height: 200px;">
       </td>
       <td>
-        <a href="/delete_rep/{{receipe.id}}" class="btn btn-danger">delete</a>
+        <a href="/delete_rep/{{receipe.id}}" class="btn btn-danger m-2">delete</a>
+        <a href="/update_rep/{{receipe.id}}" class="btn btn-success">Update</a>
       </td>
     </tr>
     {% endfor %}

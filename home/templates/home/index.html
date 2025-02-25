@@ -1,0 +1,32 @@
+{%extends "base.html"%}
+{% block start %}
+    
+    <h1>hii...! vaishnavi this side.!</h1>
+    <p>I am learning Django and i am too excited for that.</p>
+    {{students}}
+    
+    <table>
+        <tr>
+          <th>S.No</th>
+          <th>Name </th>
+          <th>Age</th>
+          <th>Can Vote?</th>
+        </tr>
+        {%for s in students %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{s.name}}</td>
+          <td>{{s.age}}</td>
+          <td>
+            {%if s.age >= 18%}
+            👍
+            {%else%}
+            👎
+            {%endif%}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      <a href="/contact/">Contacts</a>
+      <a href="/about/">About</a>
+{% endblock %}

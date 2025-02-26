@@ -28,7 +28,9 @@ urlpatterns = [
     path('delete_rep/<id>/', delete_rep),
     path('update_rep/<id>/', update_rep),
     path('contact/',contact),
-    path('about/',about),
+    path('login/',loginp),
+    path('register/',registerp),
+    path('logout/',logoutp),
     path('admin/', admin.site.urls),
 ]
 

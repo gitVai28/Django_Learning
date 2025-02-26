@@ -1,8 +1,17 @@
 from django.shortcuts import render, redirect
 from .models import *
-
-# Create your views here.
-
+from django.contrib.auth.models import User
+'''
+to flash error or success messages
+for more information refer {django messages}
+'''
+from django.contrib import messages
+# it will check username and password and return bollean value to authenticate user
+#login is functrion to maintain session 
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+# Create your views here. 
+@login_required(login_url='/login')
 def receipes(request):
     if request.method == 'POST':
         # Get data from form
@@ -57,4 +66,54 @@ def delete_rep(request, id):
     queryset = Receipe.objects.get(id = id)
     queryset.delete()
     return redirect('/receipes/')
+ 
+def loginp(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
+         
+        if not User.objects.filter(username = username).exists():
+            messages.error(request, "User does't exits !")
+            return redirect('/login/')
+        
+        user = authenticate(username=username, password=password)
+        #authenticate function returns None if password or username doesn't match
+        if user is None:
+            messages.error(request, "Invalid username or password !")
+
+        else:
+            # login maintain session for given user
+            # default time of session is 14 days
+            login(request,user)
+            return redirect('/receipes/')
+            
+    return render(request , 'login.html')
+
+def logoutp(request):
+    logout(request) 
+    return redirect('/login/')
+
+def registerp(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user  = User.objects.filter(username = username)
+
+        if  user.exists():
+            messages.info(request, "user already exists.")
+            return redirect('/register/')
+        user = User.objects.create(
+            first_name=first_name,
+            last_name=last_name,
+            username=username
+        )
+        # set_password is used to hash password it is inbuilt method in django user model
+        user.set_password(password)
+        user.save()
+        messages.success(request, "Account created successfully.")
+
+    return render(request , 'register.html')

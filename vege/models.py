@@ -39,6 +39,12 @@ class StudentID(models.Model):
     def __str__(self) -> str:
         return self.student_id
 
+class Subject(models.Model):
+    Subject_name = models.CharField(max_length=100)
+
+    def __str__(self) -> str:
+        return self.Subject_name
+
 
 class Student(models.Model):
     #on_delete=models.CASCADE  means if department is deleted then all students associated with that department will also delete
@@ -63,6 +69,17 @@ class Student(models.Model):
         ordering = ['student_name']
         verbose_name = 'student'
 
+class subjectMarks(models.Model):
+    student = models.ForeignKey(Student, related_name="studentmarks", on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    marks = models.IntegerField()
+
+    def __str__(self) -> str:
+        return f'{self.student.student_name} {self.subject.Subject_name}'
+
+    class Meta:
+        unique_together = ['student', 'subject']
+
 
     '''
     SQL queries
@@ -77,4 +94,43 @@ class Student(models.Model):
      Receipe.objects.filter(view_count__gte = 50)
      -> __gte is works like oprator (>= greater than or equal to)
      ->__lte (<= less than or equal to)
+
+     >queryset = Student.objects.filter(student_name__startswith='A')
+     -> this will return all student whose name starts with A
+    
+     >queryset = Student.objects.filter(student_email__endswith='.org')
+     -> this will return all student whose email ends with .org
+
+     > queryset = Student.objects.filter(student_name__icontains='An')
+     -> this will return all student whose name contains An
+
+     >queryset[0].department.department
+     -> this will return department of first student in queryset
+
+     >queryset = Student.objects.filter(department__department = 'Mecanical')
+            -->department__department='Mecanical'
+        department refers to a ForeignKey relationship in the Student model.
+        department__department accesses a field (department) in the related Department model.
+        'Mecanical' is the value being filtered.
+        >queryset = Student.objects.filter(department__department__in = d)
+        -->department__department__in = d   
+
+        >queryset = Student.objects.exclude(department__department = 'Civil')
+        -->exclude() is the opposite of filter() and returns all objects except those matching the given conditions
+
+        >queryset.exists()
+        -->exists() returns True if the QuerySet contains at least one object, False otherwise.
+
+        >queryset.values()[0]
+        -->values() returns a dictionary-like object for each object in the QuerySet.
+
+        >queryset[0:50]
+        -->returns the first 50 objects in the QuerySet.  
+
+        Agreegate functions works on column  
+
+      ->  Student.objects.aggregate(Avg('student_age'))
+      ->  Student.objects.aggregate(Max('student_age'))
+        annotate function used to work on two columns
+        ->Student.objects.values('student_age').annotate(Count('student_age'))             
     '''

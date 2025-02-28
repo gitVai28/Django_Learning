@@ -81,6 +81,13 @@ class subjectMarks(models.Model):
         unique_together = ['student', 'subject']
 
 
+class ReportCard(models.Model):
+    student = models.ForeignKey(Student, related_name="reportcard", on_delete=models.CASCADE)
+    student_rank = models.IntegerField()
+    date_of_reportcard = models.DateField(auto_now_add=True)  
+
+    class Meta:
+        unique_together = ['student_rank','date_of_reportcard']
     '''
     SQL queries
     //to get data in asending order

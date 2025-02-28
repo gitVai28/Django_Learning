@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from .seed import generate_rank
 '''
 to flash error or success messages
 for more information refer {django messages}
@@ -124,6 +125,9 @@ from django.db.models import Q,Sum
 def get_students(request):
     queryset = Student.objects.all()
 
+    ranks = Student.objects.annotate(marks=Sum('studentmarks__marks')).order_by('-marks','-student_age')
+    
+
     if request.GET.get('search'):
         search = request.GET.get('search')
         queryset = Student.objects.filter(
@@ -142,7 +146,19 @@ def get_students(request):
 
 
 def see_marks(request, student_id):
+    #generate_rank()
     queryset = subjectMarks.objects.filter(student__student_id__student_id = student_id)
     total_marks = queryset.aggregate(total_marks = Sum('marks'))
+    # current_rank = -1
+    # ranks = Student.objects.annotate(marks=Sum('studentmarks__marks')).order_by('-marks','-student_age')
+    # # print(ranks)
+    # # this is not good method too generate ranks because every time it needs to itereat to genrate rank
+    # #which is more time comsuming
+    # i = 1
+    # for rank in ranks:
+    #     if student_id == rank.student_id.student_id:
+    #         current_rank = i
+    #         break
+    #     i += 1
     return render(request, 'report/see_marks.html', {'queryset':queryset , 'total_marks':total_marks})
 

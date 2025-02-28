@@ -1,8 +1,9 @@
 {%extends "base.html"%}
 {% block start %}
  <div class="container mt-5">
-         <h4>Rank : </h4>
+         <h4>Rank : {{ queryset.first.student.reportcard.first.student_rank }}</h4>
          <h4>Total Marks : {{ total_marks.total_marks }}</h4>
+         <h4>Date Of Result : {{ queryset.first.student.reportcard.first.date_of_reportcard }}</h4>
         <table class="table table-striped">
             
             <tbody>
